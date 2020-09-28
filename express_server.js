@@ -11,13 +11,18 @@ const urlDatabase = {
   '9sm5xk': 'http://www.google.com'
 };
 
+
+//homepage
 app.get('/', (req, res) => {
-  res.send('Hello!');
+  res.send('<h1>Hello!</h1>\n<h2>Welcome!</h2>');
 });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+
+//pages
 
 // app.get('/urls.json', (req, res) => {
 //   res.json(urlDatabase);
