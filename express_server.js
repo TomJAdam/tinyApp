@@ -1,5 +1,7 @@
 // express server
 
+// server 
+
 const express = require('express');
 const app = express();
 const PORT = 8080;
@@ -12,10 +14,10 @@ const urlDatabase = {
 };
 
 
-//homepage
-app.get('/', (req, res) => {
-  res.send('<h1>Hello!</h1>\n<h2>Welcome!</h2>');
-});
+// //test page
+// app.get('/', (req, res) => {
+//   res.send('<h1>Hello!</h1>\n<h2>Welcome!</h2>');
+// });
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
