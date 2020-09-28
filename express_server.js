@@ -27,6 +27,11 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
+app.post("/urls", (req, res) => {
+  console.log(req.body)
+  res.send('OK');
+});
+
 
 //pages
 
@@ -44,11 +49,7 @@ app.get("/urls/:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-app.post("urls", (req, res) => {
-  console.log(req.body)
-  res.send('OK');
-});
 
-const generateRandomString = () => {
-  return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
-};
+// const generateRandomString = () => {
+//   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
+// };
