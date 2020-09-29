@@ -11,17 +11,17 @@
     <title>New URL - TinyApp Example</title>
   </head>
 
-  <body>
+  <body style="background-color: rgb(210, 242, 245);">
 
     <%- include('partials/_header') %>
-
     <main style="margin: 1em;">
       <h3>Create TinyURL</h3>
+      <h5 class="pt-2">Must include http://</h5>
       <form class="form-inline" action="/urls" method="POST">
         <div class="form-group mb-2">
           <label for="longURL">Enter a URL:</label>
           <input class="form-control" type="url" required name="longURL" placeholder="http://" style="width: 300px; margin: 1em">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-warning" style="background-color: coral; color: cornsilk;">Submit</button>
         </div>
       </form>
     </main>
