@@ -56,11 +56,14 @@ app.post("/urls/:shortURL/change", (req, res) => {
 
 app.post("/login", (req, res) => {
   const username = req.body.username
-  // console.log('username :', username);
   res.cookie('username', username);
   res.redirect(`/urls`);
 });
 
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
+  res.redirect('/urls');
+});
 
 //pages
 
