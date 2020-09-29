@@ -36,12 +36,16 @@ app.post("/urls", (req, res) => {
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   const key = req.params.shortURL;
-  console.log('key :', key);
   delete urlDatabase[key];
-  console.log('urlDatabase[key] :', urlDatabase);
-
   res.redirect("/urls")
-})
+});
+
+app.post("/urls/:shortURL/edit", (req, res) => {
+  const key = req.params.shortURL;
+  urlDatabase[key] = req.body.longURL
+  console.log('urlDatabase[key] :', urlDatabase);
+  res.redirect("/urls")
+});
 
 //pages
 
