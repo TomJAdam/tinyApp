@@ -22,7 +22,7 @@ const urlDatabase = {
 };
 
 //function for encoded string
-const generateRandomString = function() {
+const generateRandomString = () => {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
 };
 
