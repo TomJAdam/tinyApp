@@ -1,4 +1,5 @@
 // express server
+// start with npm start
 
 const express = require('express');
 const app = express();
