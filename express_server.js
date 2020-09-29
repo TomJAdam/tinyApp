@@ -21,13 +21,12 @@ const urlDatabase = {
   '9sm5xk': 'http://www.google.com'
 };
 
-
 //function for encoded string
 const generateRandomString = function() {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
 };
 
-//pages
+//posts
 
 app.post("/urls", (req, res) => {
   let key = generateRandomString();
@@ -36,12 +35,15 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  const shortURL = req.params.shortURL
-  console.log('req.params.shortURL :', req.params.shortURL);
-  delete urlDatabase.shortURL;
-  console.log('urlDatabase :', urlDatabase);
+  const key = req.params.shortURL;
+  console.log('key :', key);
+  delete urlDatabase[key];
+  console.log('urlDatabase[key] :', urlDatabase);
+
   res.redirect("/urls")
 })
+
+//pages
 
 app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
