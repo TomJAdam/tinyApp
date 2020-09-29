@@ -22,14 +22,19 @@
           </tr>
         </thead>
         <tbody>
+          
           <% for(let url in urls) { %>
             <tr>
+              <form method="POST" action="/urls/9sm5xK/delete">
               <td><%= url %></td>
               <td><%= urls[url] %></td>
+              <td><button type="POST" class="btn btn-warning" style="background-color: coral; color: cornsilk;">Delete</button></td>
+            </form>
             </tr>
             <% } %>
         </tbody>
       </table>
+    </form>
   </main>
 
   <!-- bootstrap js -->
