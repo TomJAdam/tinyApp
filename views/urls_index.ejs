@@ -25,11 +25,15 @@
           
           <% for(let url in urls) { %>
             <tr>
-              <form method="POST" action="/urls/<%= url %>/delete">
+              
               <td><%= url %></td>
               <td><%= urls[url] %></td>
+              <form method="POST" action="/urls/<%= url %>/change">
+              <td><button type="submit" class="btn btn-success" style="background-color: rgb(55, 175, 223); color: cornsilk;">Edit</button></td>
+              </form>
+              <form method="POST" action="/urls/<%= url %>/delete">
               <td><button type="submit" class="btn btn-warning" style="background-color: coral; color: cornsilk;">Delete</button></td>
-            </form>
+              </form>
             </tr>
             <% } %>
         </tbody>
