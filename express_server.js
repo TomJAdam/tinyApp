@@ -37,6 +37,8 @@ const userDatabase = {
   },
 };
 
+//* FUNCTIONS *
+
 // Creates Encoded String
 const generateRandomString = () => {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
@@ -51,6 +53,7 @@ const keyCheck = (key, email, data) => {
   }
 };
 
+// Returns random ID from email
 const findIdFromEmail = (email, data) => {
   for (let da in data) {
     if (data[da].email === email) {
@@ -87,7 +90,6 @@ app.post("/urls/:shortURL/change", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  console.log('req.body',req.body)
   const email = req.body.email
   const password = req.body.password
 
@@ -118,7 +120,7 @@ app.post("/register", (req, res) => {
     res.cookie('userID', userID);
     res.redirect('/urls');
   } else {
-    res.status(400).json({ message: '400'});
+    res.status(400).json({ message: '400, email already exists'});
   }
 });
 
