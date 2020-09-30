@@ -1,14 +1,17 @@
-// *** TinyApp Server ***
+//   *** TinyApp Server ***
 // ** start with npm start **
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
+// Server Setup
 const app = express();
-app.use(cookieParser());
 const PORT = 8080;
 
+// Middleware
+app.use(cookieParser());
 const bodyParser = require("body-parser");
+// const { response } = require('express');
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -28,8 +31,8 @@ const urlDatabase = {
 // Stores User Info
 const userDatabase = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
 };
@@ -40,15 +43,23 @@ const generateRandomString = () => {
 };
 
 // Checks for existing email
-const emailCheck = (email, data) => {
+const keyCheck = (key, email, data) => {
   for (let da in data) {
-    if (data[da].email === email) {
+    if (data[da][key] === email) {
       return true;
     }
   }
 };
 
-// Posts
+const findIdFromEmail = (email, data) => {
+  for (let da in data) {
+    if (data[da].email === email) {
+      return da
+    }
+  }
+};
+
+// Actions
 //* Ask mentor about organizing this code *
 
 
@@ -61,13 +72,13 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   const key = req.params.shortURL;
   delete urlDatabase[key];
-  res.redirect("/urls")
+  res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL/edit", (req, res) => {
   const key = req.params.shortURL;
-  urlDatabase[key] = req.body.longURL
-  res.redirect("/urls")
+  urlDatabase[key] = req.body.longURL;
+  res.redirect("/urls");
 });
 
 app.post("/urls/:shortURL/change", (req, res) => {
@@ -75,11 +86,20 @@ app.post("/urls/:shortURL/change", (req, res) => {
   res.redirect(`/urls/${key}`);
 });
 
-// app.post("/login", (req, res) => {
-//   const username = req.body.username
-//   res.cookie('username', username);
-//   res.redirect(`/urls`);
-// });
+app.post("/login", (req, res) => {
+  console.log('req.body',req.body)
+  const email = req.body.email
+  const password = req.body.password
+
+  if (!keyCheck('email', email, userDatabase)) {
+    res.status(403).json({ message: '403, email not found'})
+  } else if (keyCheck('email', email, userDatabase) && !keyCheck('password', password, userDatabase)) {
+    res.status(403).json({ message: '403, password does not match email'})
+  } else if (keyCheck('email', email, userDatabase) && keyCheck('password', password, userDatabase)) {
+      res.cookie('userID', findIdFromEmail(email, userDatabase));
+      res.redirect(`/urls`);
+  }
+});
 
 app.post("/logout", (req, res) => {
   res.clearCookie('userID');
@@ -89,23 +109,20 @@ app.post("/logout", (req, res) => {
 app.post("/register", (req, res) => {
   let userID = generateRandomString();
 
-  if (!emailCheck(req.body.email, userDatabase)) {
+  if (!keyCheck('email', req.body.email, userDatabase)) {
     userDatabase[userID] = {
       id: userID,
       email: req.body.email,
       password: req.body.password
     };
-    res.cookie('userID', userID)
+    res.cookie('userID', userID);
     res.redirect('/urls');
-  } 
-
-
-
+  } else {
+    res.status(400).json({ message: '400'});
+  }
 });
 
-
-
-// Pages
+// Routes
 
 app.get('/urls', (req, res) => {
   const templateVars = { user: userDatabase[req.cookies['userID']], urls: urlDatabase, };
@@ -129,8 +146,14 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/register", (req, res) => {
   const templateVars = { user: userDatabase[req.cookies['userID']] };
-  res.render("user_registration", templateVars)
+  res.render("user_registration", templateVars);
 });
+
+app.get("/login", (req, res) => {
+  const templateVars = { user: userDatabase[req.cookies['userID']] };
+  res.render("user_login", templateVars);
+});
+
 
 
 
