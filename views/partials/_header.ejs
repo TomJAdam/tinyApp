@@ -1,6 +1,6 @@
 <!-- header template -->
 <header>
-  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: coral;">
+  <nav class="navbar navbar-expand-md navbar-dark" style="background-color: coral;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -9,18 +9,22 @@
         <a class="navbar-brand" href="/urls">
           TinyApp
         </a>
-        <a class="nav-item nav-link" href="/urls">My URLs</a>
-        <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+          <a class="nav-item nav-link" href="/urls">My URLs</a>
+        <% if(!user){ %>
+          <a class="nav-item nav-link" href="/login">Create New URL</a>
+        <% } else{ %>
+          <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+        <% } %>
 
 <!-- Login feature -->
         
         <% if(!user){ %>
-          <ul class="nav navbar-nav" style="margin-left: 30em;">
+          <ul class="nav navbar-nav" style="margin-left: 25em;">
             <li><a class="nav-item nav-link" href="/login">Login</a></li>
             <li><a class="nav-item nav-link" href="/register">Create Accout</a></li>
           </ul>
         <% } else{ %>
-          <form style="padding-left: 25em;" class="form-inline" action="/logout" method="POST">
+          <form style="padding-left: 30em;" class="form-inline" action="/logout" method="POST">
             <a class="nav item" style="color: white;">Logged in as: &nbsp<b> <%= user.email %> &nbsp</b></a>
             <button type="submit" class="btn btn-warning" style="background-color: lightsalmon; color: cornsilk; margin-left: 1em;">Logout</button>
         </form>

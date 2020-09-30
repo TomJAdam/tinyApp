@@ -24,8 +24,8 @@ app.listen(PORT, () => {
 
 // Stores Users URLS
 const urlDatabase = {
-  'b2xvn2': 'http://www.lighthouselabs.ca',
-  '9sm5xk': 'http://www.google.com'
+  // 'b2xvn2': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' },
+  // '9sm5xk': { longURL: 'http://www.google.com', userID: 'b2xvn2' },
 };
 
 // Stores User Info
@@ -45,43 +45,61 @@ const generateRandomString = () => {
 };
 
 // Checks for existing email
-const keyCheck = (key, email, data) => {
+const keyCheck = (key, val, data) => {
   for (let da in data) {
-    if (data[da][key] === email) {
+    if (data[da][key] === val) {
       return true;
     }
   }
 };
 
-// Returns random ID from email
+// Returns ID from email
 const findIdFromEmail = (email, data) => {
   for (let da in data) {
     if (data[da].email === email) {
-      return da
+      return data[da];
     }
   }
+};
+
+// loads user specific urls
+const urlsForUser = (id, data) => {
+  let result = {}
+  for (let da in data) {
+    if (data[da].userID === id) {
+      result[da] = data[da];
+    }
+  } 
+  return result;
 };
 
 // Actions
 //* Ask mentor about organizing this code *
 
-
 app.post("/urls", (req, res) => {
   let key = generateRandomString();
-  urlDatabase[key] = req.body.longURL;
+  urlDatabase[key] = { longURL: req.body.longURL, userID: req.cookies["userID"] }
   res.redirect(`/urls/${key}`);
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   const key = req.params.shortURL;
-  delete urlDatabase[key];
-  res.redirect("/urls");
+  if (keyCheck('userID', req.cookies['userID'], urlDatabase )) {
+    delete urlDatabase[key];
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login")
+  }
 });
 
 app.post("/urls/:shortURL/edit", (req, res) => {
   const key = req.params.shortURL;
-  urlDatabase[key] = req.body.longURL;
-  res.redirect("/urls");
+  if (keyCheck('userID', req.cookies['userID'], urlDatabase )) {
+    urlDatabase[key].longURL = req.body.longURL;
+    res.redirect("/urls");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 app.post("/urls/:shortURL/change", (req, res) => {
@@ -98,8 +116,8 @@ app.post("/login", (req, res) => {
   } else if (keyCheck('email', email, userDatabase) && !keyCheck('password', password, userDatabase)) {
     res.status(403).json({ message: '403, password does not match email'})
   } else if (keyCheck('email', email, userDatabase) && keyCheck('password', password, userDatabase)) {
-      res.cookie('userID', findIdFromEmail(email, userDatabase));
-      res.redirect(`/urls`);
+    res.cookie('userID', findIdFromEmail(email, userDatabase).id);
+    res.redirect(`/urls`);
   }
 });
 
@@ -127,8 +145,12 @@ app.post("/register", (req, res) => {
 // Routes
 
 app.get('/urls', (req, res) => {
-  const templateVars = { user: userDatabase[req.cookies['userID']], urls: urlDatabase, };
-  res.render('urls_index', templateVars);
+  const templateVars = { user: userDatabase[req.cookies['userID']], urls: urlsForUser(req.cookies['userID'], urlDatabase) };
+  if (templateVars.user) {
+    res.render('urls_index', templateVars);
+  } else {
+    res.render('user_login', templateVars);
+  }
 });
 
 app.get("/urls/new", (req, res) => {
@@ -137,12 +159,12 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { user: userDatabase[req.cookies['userID']], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  const templateVars = { user: userDatabase[req.cookies['userID']], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'] };
   res.render("urls_show", templateVars);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
