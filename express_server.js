@@ -14,18 +14,27 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
 
-//enables local host
+// Enables Local Host
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-//stores urls
+// Stores Users URLS
 const urlDatabase = {
   'b2xvn2': 'http://www.lighthouselabs.ca',
   '9sm5xk': 'http://www.google.com'
 };
 
-//function for encoded string
+// Stores User Info
+const userDatabase = {
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+};
+
+// Creates Encoded String
 const generateRandomString = () => {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
 };
@@ -69,7 +78,14 @@ app.post("/logout", (req, res) => {
   res.redirect('/urls');
 });
 
-//pages
+app.post("/register", (req, res) => {
+  let userKey = generateRandomString();
+  res.redirect('/urls');
+});
+
+
+
+// Pages
 
 app.get('/urls', (req, res) => {
   const templateVars = { username: req.cookies["username"], urls: urlDatabase, };
@@ -90,5 +106,11 @@ app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
+
+app.get("/register", (req, res) => {
+  const templateVars = { username: req.cookies["username"] };
+  res.render("user_registration", templateVars)
+});
+
 
 
