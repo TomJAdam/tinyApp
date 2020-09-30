@@ -1,5 +1,6 @@
-// express server
-// start with npm start
+// *** TinyApp Server ***
+// ** start with npm start **
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 
@@ -29,7 +30,10 @@ const generateRandomString = () => {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
 };
 
-//posts
+
+// Posts
+//* Ask mentor about organizing this code *
+
 
 app.post("/urls", (req, res) => {
   let key = generateRandomString();
