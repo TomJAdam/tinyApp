@@ -5,7 +5,8 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div style="display: flex; justify-content: space-between; width: 100%;">
+        <div class="navbar-nav">
         <a class="navbar-brand" href="/urls">
           TinyApp
         </a>
@@ -15,11 +16,11 @@
         <% } else{ %>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <% } %>
-
+        </div>
 <!-- Login feature -->
         
         <% if(!user){ %>
-          <ul class="nav navbar-nav" style="margin-left: 25em;">
+          <ul class="nav navbar-nav">
             <li><a class="nav-item nav-link" href="/login">Login</a></li>
             <li><a class="nav-item nav-link" href="/register">Create Accout</a></li>
           </ul>

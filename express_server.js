@@ -88,6 +88,7 @@ app.post("/login", (req, res) => {
     // req.flash('error_message', '403! Email not found');
     // res.redirect('/login');
     res.status(403).json({ message: '403, email not found'});
+    // res.render('user_login', { error: 'Email not found' });
   } else if (keyCheck('email', req.body.email, userDatabase) && !bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
     res.status(403).json({ message: '403, password does not match email'});
   } else if (keyCheck('email', req.body.email, userDatabase) && bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
@@ -175,7 +176,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const templateVars = { user: userDatabase[req.session.user_id] };
+  const templateVars = { user: userDatabase[req.session.user_id], error: '' };
   if (templateVars.user) {
     res.redirect('/urls');
   } else {
