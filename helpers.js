@@ -1,4 +1,4 @@
-// ** HELPER FUNCTIONS ** 
+// ** HELPER FUNCTIONS **
 
 // Creates 6 char Encoded String
 const generateRandomString = () => {
@@ -25,12 +25,12 @@ const findKeyFromEmail = (email, key, data) => {
 
 // loads user specific urls (cookies/userID, urldatabase)
 const urlsForUser = (id, data) => {
-  let result = {}
+  let result = {};
   for (let da in data) {
     if (data[da].userID === id) {
       result[da] = data[da];
     }
-  } 
+  }
   return result;
 };
 

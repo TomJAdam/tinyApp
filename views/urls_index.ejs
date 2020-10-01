@@ -24,11 +24,9 @@
           </tr>
         </thead>
         <tbody>
-          
           <% for(let url in urls) { %>
             <tr>
-              
-              <td><%= url %></td>
+              <td><a add target="_blank" href="http://localhost:8080/u/<%= url %>"><%= url %></a></td>
               <td><%= urls[url]['longURL'] %></td>
               <form method="POST" action="/urls/<%= url %>/change">
               <td><button type="submit" class="btn btn-success" style="background-color: rgb(55, 175, 223); color: cornsilk;">Edit</button></td>

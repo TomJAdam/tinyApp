@@ -4,16 +4,16 @@ const { assert } = require('chai');
 
 const { findKeyFromEmail, keyCheck, urlsForUser } = require('../helpers.js');
 
-// Test Database
+// Test Databases
 const testUsers = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
+    id: "userRandomID",
+    email: "user@example.com",
     password: "purple-monkey-dinosaur"
   },
   "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   }
 };
@@ -34,7 +34,7 @@ describe('findKeyFromEmail', function() {
     assert(expectedOutput, user);
   });
   it('should return they key value of user specified with valid email', function() {
-    const user = findKeyFromEmail("user@example.com", 'password', testUsers)
+    const user = findKeyFromEmail("user@example.com", 'password', testUsers);
     const expectedOutput = "purple-monkey-dinosaur";
     assert(expectedOutput, user);
   });
@@ -64,12 +64,12 @@ describe('keyCheck', function() {
 });
 
 describe('urlsForUser', function() {
-  it ('should return urls specific to user ID', function() {
+  it('should return urls specific to user ID', function() {
     const user = urlsForUser('b2xvn2', URLS);
-    const expectedOutput = { '0sf3ks': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' }, 'bewr32': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' } }
+    const expectedOutput = { '0sf3ks': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' }, 'bewr32': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' } };
     assert.deepEqual(user, expectedOutput);
   });
-  it ('should return empty object if user ID not valid', function() {
+  it('should return empty object if user ID not valid', function() {
     const user = urlsForUser('xxxxxx', URLS);
     const expectedOutput = {};
     assert.deepEqual(user, expectedOutput);
