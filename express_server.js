@@ -5,6 +5,9 @@ const cookieSession = require('cookie-session');
 const express = require('express');
 const bcrypt = require('bcrypt');
 
+// Functions
+const { generateRandomString, keyCheck, findKeyFromEmail, urlsForUser } = require('./helpers');
+
 // Server Setup
 const app = express();
 const PORT = 8080;
@@ -15,7 +18,6 @@ app.use(cookieSession({
   keys: ['key1'],
 }));
 const bodyParser = require("body-parser");
-// const { response } = require('express');
 app.use(bodyParser.urlencoded({extended: true}));
 
 
@@ -26,14 +28,13 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-// Stores Users URLS
+// Databases
 const urlDatabase = {
-  // 'b2xvn2': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' },
-  // '9sm5xk': { longURL: 'http://www.google.com', userID: 'b2xvn2' },
+  //EXAMPLE: '02x322': { longURL: 'http://www.lighthouselabs.ca', userID: 'b2xvn2' },
 };
 
-// Stores User Info
 const userDatabase = {
+  // EXAMPLE:
   // "userRandomID": {
   //   id: "userRandomID",
   //   email: "user@example.com",
@@ -41,44 +42,7 @@ const userDatabase = {
   // },
 };
 
-//* FUNCTIONS *
-
-// Creates Encoded String
-const generateRandomString = () => {
-  return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
-};
-
-// Checks for a value in a key within the data structure ('string', value, object)
-const keyCheck = (key, val, data) => {
-  for (let da in data) {
-    if (data[da][key] === val) {
-      return data[da][key];
-    }
-  }
-};
-
-// Returns key value from email (user email, 'string', object)
-const findKeyFromEmail = (email, key, data) => {
-  for (let da in data) {
-    if (data[da].email === email) {
-      return data[da][key];
-    }
-  }
-};
-
-// loads user specific urls (cookies/userID, urldatabase)
-const urlsForUser = (id, data) => {
-  let result = {}
-  for (let da in data) {
-    if (data[da].userID === id) {
-      result[da] = data[da];
-    }
-  } 
-  return result;
-};
-
 // Actions
-//* Ask mentor about organizing this code *
 
 app.post("/urls", (req, res) => {
   let key = generateRandomString();
