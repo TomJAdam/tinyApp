@@ -3,6 +3,7 @@
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 // Server Setup
 const app = express();
@@ -30,11 +31,11 @@ const urlDatabase = {
 
 // Stores User Info
 const userDatabase = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: "purple-monkey-dinosaur"
-  },
+  // "userRandomID": {
+  //   id: "userRandomID",
+  //   email: "user@example.com",
+  //   password: "purple-monkey-dinosaur"
+  // },
 };
 
 //* FUNCTIONS *
@@ -44,25 +45,25 @@ const generateRandomString = () => {
   return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(0, 6);
 };
 
-// Checks for existing email
+// Checks for a value in a key within the data structure ('string', value, object)
 const keyCheck = (key, val, data) => {
   for (let da in data) {
     if (data[da][key] === val) {
-      return true;
+      return data[da][key];
     }
   }
 };
 
-// Returns ID from email
-const findIdFromEmail = (email, data) => {
+// Returns ID from email (user email, 'string', object)
+const findKeyFromEmail = (email, key, data) => {
   for (let da in data) {
     if (data[da].email === email) {
-      return data[da];
+      return data[da][key];
     }
   }
 };
 
-// loads user specific urls
+// loads user specific urls (cookies, urldatabase)
 const urlsForUser = (id, data) => {
   let result = {}
   for (let da in data) {
@@ -108,15 +109,14 @@ app.post("/urls/:shortURL/change", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  const email = req.body.email
-  const password = req.body.password
+  console.log('userDatabase :', userDatabase);
 
-  if (!keyCheck('email', email, userDatabase)) {
+  if (!keyCheck('email', req.body.email, userDatabase)) {
     res.status(403).json({ message: '403, email not found'})
-  } else if (keyCheck('email', email, userDatabase) && !keyCheck('password', password, userDatabase)) {
+  } else if (keyCheck('email', req.body.email, userDatabase) && !bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
     res.status(403).json({ message: '403, password does not match email'})
-  } else if (keyCheck('email', email, userDatabase) && keyCheck('password', password, userDatabase)) {
-    res.cookie('userID', findIdFromEmail(email, userDatabase).id);
+  } else if (keyCheck('email', req.body.email, userDatabase) && bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
+    res.cookie('userID', findKeyFromEmail(req.body.email, 'id', userDatabase));
     res.redirect(`/urls`);
   }
 });
@@ -133,7 +133,7 @@ app.post("/register", (req, res) => {
     userDatabase[userID] = {
       id: userID,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password, 10)
     };
     res.cookie('userID', userID);
     res.redirect('/urls');
