@@ -156,6 +156,10 @@ app.get("/u/:shortURL", (req, res) => {
   const templateVars = { user: userDatabase[req.session.user_id] };
   if (urlDatabase[req.params.shortURL] !== undefined) {
 
+    Date.prototype.addHours = function(h) {
+      this.setTime(this.getTime() + (h*60*60*1000));
+      return this;
+    }
     let date = new Date;
     date.addHours(-7);
     let timeStamp = `${date.toDateString()} at ${date.toLocaleTimeString('en-US')}`;
