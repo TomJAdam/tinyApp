@@ -11,7 +11,7 @@ const { generateRandomString, keyCheck, findKeyFromEmail, urlsForUser } = requir
 const app = express();
 const PORT = 8080;
 
-// Middleware 
+// Middleware
 app.use(cookieSession({
   name: 'session',
   keys: ['key1'],
@@ -42,7 +42,6 @@ const userDatabase = {
 };
 
 // Actions
-
 app.post("/urls", (req, res) => {
   let key = generateRandomString();
   urlDatabase[key] = { longURL: req.body.longURL, userID: req.session.user_id };
@@ -56,8 +55,8 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[key];
     res.redirect("/urls");
   } else {
-    templateVars.error = 'Not your URL!'
-    res.render('error', templateVars)
+    templateVars.error = 'Not your URL!';
+    res.render('error', templateVars);
   }
 });
 
@@ -68,8 +67,8 @@ app.post("/urls/:shortURL/edit", (req, res) => {
     urlDatabase[key].longURL = req.body.longURL;
     res.redirect("/urls");
   } else {
-    templateVars.error = 'Not your URL!'
-    res.render('error', templateVars)
+    templateVars.error = 'Not your URL!';
+    res.render('error', templateVars);
   }
 });
 
@@ -117,7 +116,7 @@ app.get('/', (req, res) => {
   if (templateVars.user) {
     res.redirect('/urls');
   } else {
-    res.redirect('/login')
+    res.redirect('/login');
   }
 });
 
@@ -126,8 +125,8 @@ app.get('/urls', (req, res) => {
   if (templateVars.user) {
     res.render('urls_index', templateVars);
   } else {
-    templateVars.error = 'Please login!'
-    res.render('error', templateVars)
+    templateVars.error = 'Please login!';
+    res.render('error', templateVars);
   }
 });
 
@@ -136,21 +135,21 @@ app.get("/urls/new", (req, res) => {
   if (templateVars.user) {
     res.render("urls_new", templateVars);
   } else {
-    res.redirect('/login')
+    res.redirect('/login');
   }
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { user: userDatabase[req.session.user_id], shortURL: req.params.shortURL};
-    if (urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL] === undefined) {
-      templateVars.error = 'This URL is invalid or does not belong to you!';
-      res.render('error', templateVars);
-    } else if (templateVars.user.id === urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL]['userID'] ) {
-      templateVars.longURL = urlDatabase[req.params.shortURL]['longURL'];
-      res.render("urls_show", templateVars);
-    } else {
-      res.redirect('/login')
-    } 
+  if (urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL] === undefined) {
+    templateVars.error = 'This URL is invalid or does not belong to you!';
+    res.render('error', templateVars);
+  } else if (templateVars.user.id === urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL]['userID']) {
+    templateVars.longURL = urlDatabase[req.params.shortURL]['longURL'];
+    res.render("urls_show", templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {
@@ -159,8 +158,8 @@ app.get("/u/:shortURL", (req, res) => {
     const longURL = urlDatabase[req.params.shortURL].longURL;
     res.redirect(longURL);
   } else {
-    templateVars.error = 'This URL does not exist!'
-    res.render('error', templateVars)
+    templateVars.error = 'This URL does not exist!';
+    res.render('error', templateVars);
   }
 });
 
