@@ -155,6 +155,17 @@ app.get("/urls/:shortURL", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   const templateVars = { user: userDatabase[req.session.user_id] };
   if (urlDatabase[req.params.shortURL] !== undefined) {
+
+    let date = new Date;
+    date.addHours(-7);
+    let timeStamp = `${date.toDateString()} at ${date.toLocaleTimeString('en-US')}`;
+
+    if (!urlDatabase[req.params.shortURL].totalVisits) {
+      urlDatabase[req.params.shortURL].totalVisits = 1;
+    } else {
+      urlDatabase[req.params.shortURL].totalVisits++;
+    }
+    urlDatabase[req.params.shortURL].timeStamp = timeStamp;
     const longURL = urlDatabase[req.params.shortURL].longURL;
     res.redirect(longURL);
   } else {

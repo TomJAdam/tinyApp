@@ -19,6 +19,8 @@
           <tr>
             <th scope="col">Short URL</th>
             <th scope="col">Long URL</th>
+            <th scope="col">Visits:</th>
+            <th scope="col">Last Visited:</th>
             <th scope="col">&nbsp Edit</th>
             <th scope="col">&nbsp Delete</th>
           </tr>
@@ -28,6 +30,8 @@
             <tr>
               <td><a add target="_blank" href="http://localhost:8080/u/<%= url %>"><%= url %></a></td>
               <td><%= urls[url]['longURL'] %></td>
+              <td style="padding-left: 1.75em;"><%= urls[url]['totalVisits'] %></td>
+              <td ><%= urls[url]['timeStamp'] %></td>
               <form method="POST" action="/urls/<%= url %>/change">
               <td><button type="submit" class="btn btn-success" style="background-color: rgb(55, 175, 223); color: cornsilk;">Edit</button></td>
               </form>
