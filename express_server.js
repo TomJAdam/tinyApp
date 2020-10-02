@@ -3,8 +3,6 @@
 const cookieSession = require('cookie-session');
 const express = require('express');
 const bcrypt = require('bcrypt');
-// const session = require('express-session');
-// const flash = require('connect-flash');
 
 // Functions
 const { generateRandomString, keyCheck, findKeyFromEmail, urlsForUser } = require('./helpers');
@@ -13,13 +11,7 @@ const { generateRandomString, keyCheck, findKeyFromEmail, urlsForUser } = requir
 const app = express();
 const PORT = 8080;
 
-// Middleware
-// app.use(session({
-// 	secret:'happy dog',
-// 	saveUninitialized: true,
-// 	resave: true
-// }));
-// app.use(flash());
+// Middleware 
 app.use(cookieSession({
   name: 'session',
   keys: ['key1'],
@@ -58,22 +50,26 @@ app.post("/urls", (req, res) => {
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const templateVars = { user: userDatabase[req.session.user_id], urls: urlsForUser(req.session.user_id, urlDatabase) };
   const key = req.params.shortURL;
   if (keyCheck('userID', req.session.user_id, urlDatabase)) {
     delete urlDatabase[key];
     res.redirect("/urls");
   } else {
-    res.redirect("/login");
+    templateVars.error = 'Not your URL!'
+    res.render('error', templateVars)
   }
 });
 
 app.post("/urls/:shortURL/edit", (req, res) => {
+  const templateVars = { user: userDatabase[req.session.user_id], urls: urlsForUser(req.session.user_id, urlDatabase) };
   const key = req.params.shortURL;
   if (keyCheck('userID', req.session.user_id, urlDatabase)) {
     urlDatabase[key].longURL = req.body.longURL;
     res.redirect("/urls");
   } else {
-    res.redirect("/login");
+    templateVars.error = 'Not your URL!'
+    res.render('error', templateVars)
   }
 });
 
@@ -85,12 +81,9 @@ app.post("/urls/:shortURL/change", (req, res) => {
 app.post("/login", (req, res) => {
 
   if (!keyCheck('email', req.body.email, userDatabase)) {
-    // req.flash('error_message', '403! Email not found');
-    // res.redirect('/login');
-    res.status(403).json({ message: '403, email not found'});
-    // res.render('user_login', { error: 'Email not found' });
+    res.render('user_login', { user: null , error: 'Email not found' });
   } else if (keyCheck('email', req.body.email, userDatabase) && !bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
-    res.status(403).json({ message: '403, password does not match email'});
+    res.render('user_login', { user: null , error: 'Incorrect password' });
   } else if (keyCheck('email', req.body.email, userDatabase) && bcrypt.compareSync(req.body.password, findKeyFromEmail(req.body.email, 'password', userDatabase))) {
     req.session.user_id = findKeyFromEmail(req.body.email, 'id', userDatabase);
     res.redirect(`/urls`);
@@ -99,7 +92,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect('/urls');
+  res.redirect('/login');
 });
 
 app.post("/register", (req, res) => {
@@ -114,7 +107,7 @@ app.post("/register", (req, res) => {
     req.session.user_id = userID;
     res.redirect('/urls');
   } else {
-    res.status(400).json({ message: '400, email already exists'});
+    res.render('user_registration', { user: null , error: 'Email already exists' });
   }
 });
 
@@ -122,9 +115,9 @@ app.post("/register", (req, res) => {
 app.get('/', (req, res) => {
   const templateVars = { user: userDatabase[req.session.user_id], urls: urlsForUser(req.session.user_id, urlDatabase) };
   if (templateVars.user) {
-    res.render('urls_index', templateVars);
+    res.redirect('/urls');
   } else {
-    res.render('user_login', templateVars);
+    res.redirect('/login')
   }
 });
 
@@ -133,7 +126,8 @@ app.get('/urls', (req, res) => {
   if (templateVars.user) {
     res.render('urls_index', templateVars);
   } else {
-    res.render('user_login', templateVars);
+    templateVars.error = 'Please login!'
+    res.render('error', templateVars)
   }
 });
 
@@ -142,32 +136,36 @@ app.get("/urls/new", (req, res) => {
   if (templateVars.user) {
     res.render("urls_new", templateVars);
   } else {
-    res.render('user_login', templateVars);
+    res.redirect('/login')
   }
 });
-//! ADD ERROR
+
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { user: userDatabase[req.session.user_id], shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]['longURL'] };
-  if (urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL] === undefined) {
-    res.render('user_login', templateVars);
-  } else if (templateVars.user.id === urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL]['userID'] ) {
-    res.render("urls_show", templateVars);
-  } else {
-    res.render('user_login', templateVars);
-  } 
+  const templateVars = { user: userDatabase[req.session.user_id], shortURL: req.params.shortURL};
+    if (urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL] === undefined) {
+      templateVars.error = 'This URL is invalid or does not belong to you!';
+      res.render('error', templateVars);
+    } else if (templateVars.user.id === urlsForUser(req.session.user_id, urlDatabase)[templateVars.shortURL]['userID'] ) {
+      templateVars.longURL = urlDatabase[req.params.shortURL]['longURL'];
+      res.render("urls_show", templateVars);
+    } else {
+      res.redirect('/login')
+    } 
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  const templateVars = { user: userDatabase[req.session.user_id] };
   if (urlDatabase[req.params.shortURL] !== undefined) {
     const longURL = urlDatabase[req.params.shortURL].longURL;
     res.redirect(longURL);
   } else {
-    res.status(403).json({ message: '404, page not found'});
+    templateVars.error = 'This URL does not exist!'
+    res.render('error', templateVars)
   }
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = { user: userDatabase[req.session.user_id] };
+  const templateVars = { user: userDatabase[req.session.user_id], error: '' };
   if (templateVars.user) {
     res.redirect('/urls');
   } else {

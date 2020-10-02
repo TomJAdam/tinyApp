@@ -2,7 +2,7 @@
 
 // Creates 6 char Encoded String
 const generateRandomString = () => {
-  return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(2, 8);
+  return Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substr(2, 6);
 };
 
 // Checks for a value in a key within the data structure ('string', value, object)

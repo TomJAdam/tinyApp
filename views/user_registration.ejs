@@ -18,6 +18,10 @@
     <label style="padding-top: 2em;" for="longURL"><h2>Create Account:</h2></label>
   </div>
 
+  <% if(error){ %>
+    <p style="color: tomato; text-align: center;"><%= error %></p>
+    <% } %>
+
   <div class="d-flex justify-content-center">
     <form class="form-group" method="POST" action="/register">
       <input class="form-control" type="email" required name="email" placeholder="example@tinyapp.ca" style="width: 300px; margin: 1em">
