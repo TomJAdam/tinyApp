@@ -7,15 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp - TinyURL</title>
+  <title>tinyApp - tinyURL</title>
 </head>
 
-<body style="background-color: rgb(210, 242, 245);">
+<body style="background-color: rgb(210, 242, 245); font-family: Verdana, Geneva, Tahoma, sans-serif;">
   <%- include('partials/_header') %>
   <div style="background-color: rgb(55, 175, 223) ;" class="card text-center">
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">Short URL: <a add target="_blank" href="/u/<%= shortURL %>"><%= shortURL %></a></p>
+        <h5 class="card-title">tiny<b>URL</b> for: <%= longURL %></h5>
+        <p class="card-text">short<b>URL</b>: <a add target="_blank" href="/u/<%= shortURL %>"><%= shortURL %></a></p>
       </div>
   </div>
   <div class="text-center text-muted">

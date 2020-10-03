@@ -8,14 +8,15 @@
 
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>TinyApp - User Reigistration</title>
+  <title>tinyApp - User Reigistration</title>
 </head>
 
-<body style="background-color: rgb(210, 242, 245);">
+<body style="background-color: rgb(210, 242, 245); font-family: Verdana, Geneva, Tahoma, sans-serif;">
   <%- include('partials/_header') %>
 
-  <div class="text-center text-muted">
-    <label style="padding-top: 2em;" for="longURL"><h2>Create Account:</h2></label>
+  <div style="margin-top: 7em;" class="text-center">
+    <h2 style="font-size: 350%;">tiny<b>App</b></h2>
+    <label style="padding-top: 2em;" for="longURL" class="text-muted"><h3>Create Account:</h3></label>
   </div>
 
   <% if(error){ %>

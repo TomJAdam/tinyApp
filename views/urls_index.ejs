@@ -7,18 +7,18 @@
 
     <!-- bootstrap css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <title>TinyApp</title>
+    <title>tinyApp</title>
   </head>
-  <body style="background-color: rgb(210, 242, 245);" >
+  <body style="background-color: rgb(210, 242, 245); font-family: Verdana, Geneva, Tahoma, sans-serif;" >
     <!-- header template -->
     <%- include('partials/_header') %>
     <main style="margin: 1em;">
-    <h3 style="padding-top: 1em;">My URLs</h3>
-      <table class='table'>
+    <h3 style="padding-top: 1em; font-size: 200%;">My tiny<b>URLs</b></h3>
+      <table style="margin-top: 2em;" class='table'>
         <thead>
-          <tr>
-            <th scope="col">Short URL</th>
-            <th scope="col">Long URL</th>
+          <tr style="padding-bottom: 1em;">
+            <th scope="col">tinyURL</th>
+            <th scope="col">hugeURL</th>
             <th scope="col">Visits:</th>
             <th scope="col">Last Visited:</th>
             <th scope="col">&nbsp Edit</th>
