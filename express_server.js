@@ -125,8 +125,7 @@ app.get('/urls', (req, res) => {
   if (templateVars.user) {
     res.render('urls_index', templateVars);
   } else {
-    templateVars.error = 'Please login!';
-    res.render('error', templateVars);
+    res.redirect('/login');
   }
 });
 
